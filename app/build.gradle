@@ -13,7 +13,7 @@ android {
         }
     }
     compileSdkVersion 24
-    buildToolsVersion '26.0.2'
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.watabou.unbreakablepixeldungeon"
         minSdkVersion 9

@@ -85,6 +85,7 @@ public abstract class Char extends Actor {
 	public boolean paralysed	= false;
 	public boolean rooted		= false;
 	public boolean flying		= false;
+	public boolean losBlocking	= false;
 	public int invisible		= 0;
 	
 	public int viewDistance	= 8;
@@ -303,8 +304,9 @@ public abstract class Char extends Actor {
 	protected void spend( float time ) {
 		
 		float timeScale = 1f;
-		if (buff( Slow.class ) != null) {
-			timeScale *= 0.5f;
+		Slow s = buff( Slow.class );
+		if (s != null) {
+			timeScale *= s.timeScale();
 		}
 		if (buff( Speed.class ) != null) {
 			timeScale *= 2.0f;

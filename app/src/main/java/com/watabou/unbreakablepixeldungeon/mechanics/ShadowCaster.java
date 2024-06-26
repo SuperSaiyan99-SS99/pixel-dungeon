@@ -19,6 +19,8 @@ package com.watabou.unbreakablepixeldungeon.mechanics;
 
 import java.util.Arrays;
 
+import com.watabou.unbreakablepixeldungeon.actors.Actor;
+import com.watabou.unbreakablepixeldungeon.actors.Char;
 import com.watabou.unbreakablepixeldungeon.levels.Level;
 
 public final class ShadowCaster {
@@ -31,7 +33,7 @@ public final class ShadowCaster {
 	private static int distance;
 	private static int limits[];
 	
-	private static boolean[] losBlocking;
+	private static boolean[] losBlocking = new boolean[Level.LENGTH];
 	private static boolean[] fieldOfView;
 	
 	private static int[][] rounding;
@@ -49,7 +51,15 @@ public final class ShadowCaster {
 	
 	public static void castShadow( int x, int y, boolean[] fieldOfView, int distance ) {
 
-		losBlocking = Level.losBlocking;
+		System.arraycopy( Level.losBlocking, 0, losBlocking, 0, Level.LENGTH );
+		
+		for (Actor actor : Actor.all()) {
+			if (actor instanceof Char) {
+				Char ch = (Char)actor;
+				int i = ch.pos;
+				losBlocking[i] = losBlocking[i] | ch.losBlocking;
+			}
+		}
 		
 		ShadowCaster.distance = distance;
 		limits = rounding[distance];

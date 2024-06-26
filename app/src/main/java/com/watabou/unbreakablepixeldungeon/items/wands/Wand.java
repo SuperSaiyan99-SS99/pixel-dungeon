@@ -35,12 +35,14 @@ import com.watabou.unbreakablepixeldungeon.items.ItemStatusHandler;
 import com.watabou.unbreakablepixeldungeon.items.KindOfWeapon;
 import com.watabou.unbreakablepixeldungeon.items.bags.Bag;
 import com.watabou.unbreakablepixeldungeon.items.rings.RingOfPower.Power;
+import com.watabou.unbreakablepixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.watabou.unbreakablepixeldungeon.mechanics.Ballistica;
 import com.watabou.unbreakablepixeldungeon.scenes.CellSelector;
 import com.watabou.unbreakablepixeldungeon.scenes.GameScene;
 import com.watabou.unbreakablepixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.unbreakablepixeldungeon.ui.QuickSlot;
 import com.watabou.unbreakablepixeldungeon.utils.GLog;
+import com.watabou.unbreakablepixeldungeon.windows.WndBag;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
@@ -50,6 +52,7 @@ public abstract class Wand extends KindOfWeapon {
 	private static final int USAGES_TO_KNOW	= 40;
 	
 	public static final String AC_ZAP	= "ZAP";
+	public static final String AC_MERGE	= "MERGE";
 	
 	private static final String TXT_WOOD	= "This thin %s wand is warm to the touch. Who knows what it will do when used?";
 	private static final String TXT_DAMAGE	= "When this wand is used as a melee weapon, its average damage is %d points per hit.";
@@ -60,7 +63,13 @@ public abstract class Wand extends KindOfWeapon {
 	
 	private static final String TXT_IDENTIFY	= "You are now familiar enough with your %s.";
 	
-	private static final float TIME_TO_ZAP	= 1f;
+	private static final String TXT_SELECT_WAND	= "Select a wand to merge";
+	private static final String TXT_MERGED		= "you merged two your wands to create one %s";
+	
+	private static final float TIME_TO_ZAP		= 1f;
+	private static final float TIME_TO_MERGE	= 2f;
+	
+	protected boolean disenchantEquipped;
 	
 	public int maxCharges = initialCharges();
 	public int curCharges = maxCharges;
@@ -146,6 +155,9 @@ public abstract class Wand extends KindOfWeapon {
 			actions.remove( AC_EQUIP );
 			actions.remove( AC_UNEQUIP );
 		}
+		if (hero.belongings.getItems( getClass() ).size() > 1) {
+			actions.add( AC_MERGE );
+		}
 		return actions;
 	}
 	
@@ -168,11 +180,32 @@ public abstract class Wand extends KindOfWeapon {
 			curItem = this;
 			GameScene.selectCell( zapper );
 			
+		} else if (action.equals( AC_MERGE )) {
+			
+			doMerge( hero );
+			
 		} else {
 			
 			super.execute( hero, action );
 			
 		}
+	}
+	
+	protected void doMerge( Hero hero ) {
+		
+		if (hero.belongings.weapon == this) {
+			disenchantEquipped = true;
+			hero.belongings.weapon = null;
+			updateQuickslot();
+		} else {
+			disenchantEquipped = false;
+			detach( hero.belongings.backpack );
+		}
+		
+		curUser = hero;
+		WndBag.wandClass = getClass();
+		GameScene.selectItem( mergeItemSelector, WndBag.Mode.WAND, TXT_SELECT_WAND );
+		
 	}
 	
 	protected abstract void onZap( int cell );
@@ -457,6 +490,38 @@ public abstract class Wand extends KindOfWeapon {
 		@Override
 		public String prompt() {
 			return "Choose direction to zap";
+		}
+	};
+	
+	private final WndBag.Listener mergeItemSelector = new WndBag.Listener() {
+		@Override
+		public void onSelect( Item item ) {
+			if (item != null) {
+				
+				Sample.INSTANCE.play( Assets.SND_EVOKE );
+				ScrollOfUpgrade.upgrade( curUser );
+				evoke( curUser );
+				
+				Wand wand = (Wand)item;
+				wand.level( Math.max( wand.level(), level() ) );
+				wand.levelKnown = wand.levelKnown && levelKnown;
+				wand.curChargeKnown = wand.curChargeKnown && curChargeKnown;
+				wand.upgrade();
+				
+				GLog.w( TXT_MERGED, wand.toString() );
+				
+				curUser.spendAndNext( TIME_TO_MERGE );
+				
+				Badges.validateItemLevelAquired( item );
+				
+			} else {
+				if (disenchantEquipped) {
+					curUser.belongings.weapon = Wand.this;
+					updateQuickslot();
+				} else {
+					collect( curUser.belongings.backpack );
+				}
+			}
 		}
 	};
 	

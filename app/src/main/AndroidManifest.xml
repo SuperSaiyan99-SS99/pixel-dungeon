@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.watabou.unbreakablepixeldungeon"
-	android:versionCode="75"
-	android:versionName="1.9.1 PD; v 0.1.0 Unbreakable"
+	android:versionCode="77"
+	android:versionName="1.9.2a PD; v 0.1.0 Unbreakable"
 	android:installLocation="auto">
 
     <uses-permission android:name="android.permission.VIBRATE"/>

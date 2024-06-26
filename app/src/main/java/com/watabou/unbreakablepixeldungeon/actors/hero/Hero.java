@@ -32,6 +32,7 @@ import com.watabou.unbreakablepixeldungeon.GamesInProgress;
 import com.watabou.unbreakablepixeldungeon.ResultDescriptions;
 import com.watabou.unbreakablepixeldungeon.actors.Actor;
 import com.watabou.unbreakablepixeldungeon.actors.Char;
+import com.watabou.unbreakablepixeldungeon.actors.blobs.SacrificialFire;
 import com.watabou.unbreakablepixeldungeon.actors.buffs.Barkskin;
 import com.watabou.unbreakablepixeldungeon.actors.buffs.Bleeding;
 import com.watabou.unbreakablepixeldungeon.actors.buffs.Blindness;
@@ -343,13 +344,33 @@ public class Hero extends Char {
 	
 	public float attackDelay() {
 		KindOfWeapon wep = rangedWeapon != null ? rangedWeapon : belongings.weapon;
+		float delay;
 		if (wep != null) {
 			
-			return wep.speedFactor( this );
-						
+			delay = wep.speedFactor( this );
+			
 		} else {
-			return 1f;
+			delay = 1f;
 		}
+		
+		switch (subClass) {
+			case BERSERKER:
+				int count = 0;
+				for (int n : Level.NEIGHBOURS8) {
+					if (Actor.findChar( pos + n ) != null) {
+						count++;
+					}
+				}
+				
+				if (count > 1) {
+					delay *= 1f - (count / 16f);
+				}
+				break;
+			default:
+				break;
+		}
+		
+		return delay;
 	}
 	
 	@Override
@@ -803,6 +824,10 @@ public class Hero extends Char {
 	
 	@Override
 	public int attackProc( Char enemy, int damage ) {
+		if ((SacrificialFire.Marked)buff( SacrificialFire.Marked.class ) != null) {
+			Buff.prolong( enemy, SacrificialFire.Marked.class, SacrificialFire.Marked.DURATION );
+		}
+		
 		KindOfWeapon wep = rangedWeapon != null ? rangedWeapon : belongings.weapon;
 		if (wep != null) {
 			

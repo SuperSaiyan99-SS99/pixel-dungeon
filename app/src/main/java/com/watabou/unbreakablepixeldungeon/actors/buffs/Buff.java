@@ -19,6 +19,7 @@ package com.watabou.unbreakablepixeldungeon.actors.buffs;
 
 import com.watabou.unbreakablepixeldungeon.actors.Actor;
 import com.watabou.unbreakablepixeldungeon.actors.Char;
+import com.watabou.unbreakablepixeldungeon.items.rings.RingOfElements.Resistance;
 import com.watabou.unbreakablepixeldungeon.ui.BuffIndicator;
 
 public class Buff extends Actor {
@@ -49,6 +50,11 @@ public class Buff extends Actor {
 	
 	public int icon() {
 		return BuffIndicator.NONE;
+	}
+	
+	public static float durationFactor( Char ch ) {
+		Resistance r = ch.buff( Resistance.class );
+		return r != null ? r.durationFactor() : 1f;
 	}
 	
 	public static<T extends Buff> T append( Char target, Class<T> buffClass ) {

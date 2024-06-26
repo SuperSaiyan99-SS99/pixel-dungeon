@@ -26,6 +26,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.unbreakablepixeldungeon.Assets;
 import com.watabou.unbreakablepixeldungeon.Dungeon;
+import com.watabou.unbreakablepixeldungeon.actors.buffs.Disguise;
 import com.watabou.unbreakablepixeldungeon.actors.hero.Hero;
 import com.watabou.unbreakablepixeldungeon.actors.hero.HeroClass;
 import com.watabou.utils.Callback;
@@ -47,8 +48,7 @@ public class HeroSprite extends CharSprite {
 		
 		link( Dungeon.hero );
 		
-		texture( Dungeon.hero.heroClass.spritesheet() );
-		updateArmor();
+		updateTexture();
 		
 		idle();
 	}
@@ -79,6 +79,12 @@ public class HeroSprite extends CharSprite {
 		
 		read = new Animation( 20, false );
 		read.frames( film, 19, 20, 20, 20, 20, 20, 20, 20, 20, 19 );
+	}
+	
+	public void updateTexture() {
+		Disguise disguise = Dungeon.hero.buff( Disguise.class );
+		texture( (disguise != null ? disguise.costume : Dungeon.hero.heroClass).spritesheet() );
+		updateArmor();
 	}
 	
 	@Override

@@ -17,8 +17,14 @@
  */
 package com.watabou.unbreakablepixeldungeon.actors.blobs;
 
+import com.watabou.noosa.audio.Sample;
+import com.watabou.unbreakablepixeldungeon.Assets;
+import com.watabou.unbreakablepixeldungeon.Dungeon;
 import com.watabou.unbreakablepixeldungeon.Journal;
 import com.watabou.unbreakablepixeldungeon.Journal.Feature;
+import com.watabou.unbreakablepixeldungeon.actors.buffs.Buff;
+import com.watabou.unbreakablepixeldungeon.actors.buffs.Disguise;
+import com.watabou.unbreakablepixeldungeon.actors.hero.Hero;
 import com.watabou.unbreakablepixeldungeon.effects.BlobEmitter;
 import com.watabou.unbreakablepixeldungeon.effects.Speck;
 import com.watabou.unbreakablepixeldungeon.items.Generator;
@@ -34,8 +40,36 @@ import com.watabou.unbreakablepixeldungeon.items.scrolls.ScrollOfEnchantment;
 import com.watabou.unbreakablepixeldungeon.items.wands.Wand;
 import com.watabou.unbreakablepixeldungeon.items.weapon.melee.*;
 import com.watabou.unbreakablepixeldungeon.plants.Plant;
+import com.watabou.unbreakablepixeldungeon.sprites.HeroSprite;
+import com.watabou.unbreakablepixeldungeon.utils.GLog;
 
 public class WaterOfTransmutation extends WellWater {
+	
+	private static final String TXT_PROCCED =
+		"As you take a sip, you feel something changes in you.";
+	
+	@Override
+	protected boolean affectHero( Hero hero ) {
+		
+		Sample.INSTANCE.play( Assets.SND_DRINK );
+		
+		Disguise disguise = hero.buff( Disguise.class );
+		if (disguise != null) {
+			Buff.affect( hero, Disguise.class, Disguise.DURATION ).choose( hero.heroClass, disguise.costume );
+		} else {
+			Buff.affect( hero, Disguise.class, Disguise.DURATION ).choose( hero.heroClass, null );
+		}
+		
+		Dungeon.hero.interrupt();
+		
+		((HeroSprite)hero.sprite).updateTexture();
+		
+		GLog.h( TXT_PROCCED );
+		
+		Journal.remove( Journal.Feature.WELL_OF_TRANSMUTATION );
+		
+		return true;
+	}
 	
 	@Override
 	protected Item affectItem( Item item ) {

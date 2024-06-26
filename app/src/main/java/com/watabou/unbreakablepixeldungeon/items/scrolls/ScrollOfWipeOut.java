@@ -29,6 +29,7 @@ import com.watabou.unbreakablepixeldungeon.actors.mobs.Bestiary;
 import com.watabou.unbreakablepixeldungeon.actors.mobs.Mob;
 import com.watabou.unbreakablepixeldungeon.effects.CellEmitter;
 import com.watabou.unbreakablepixeldungeon.effects.Speck;
+import com.watabou.unbreakablepixeldungeon.effects.particles.WrathParticle;
 import com.watabou.unbreakablepixeldungeon.items.Heap;
 import com.watabou.unbreakablepixeldungeon.items.Heap.Type;
 import com.watabou.unbreakablepixeldungeon.items.Item;
@@ -81,7 +82,8 @@ public class ScrollOfWipeOut extends Item {
 	}
 	
 	private void doRead() {
-		GameScene.flash( 0xFF6644 );
+		GameScene.flash( 0x224477 );
+		curUser.sprite.centerEmitter().start( WrathParticle.FACTORY, 0.01f, 30 );
 		
 		Invisibility.dispel();
 		

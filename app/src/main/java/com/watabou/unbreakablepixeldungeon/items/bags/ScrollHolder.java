@@ -19,6 +19,7 @@ package com.watabou.unbreakablepixeldungeon.items.bags;
 
 import com.watabou.unbreakablepixeldungeon.items.Item;
 import com.watabou.unbreakablepixeldungeon.items.scrolls.Scroll;
+import com.watabou.unbreakablepixeldungeon.items.scrolls.ScrollOfWipeOut;
 import com.watabou.unbreakablepixeldungeon.sprites.ItemSpriteSheet;
 
 public class ScrollHolder extends Bag {
@@ -32,7 +33,7 @@ public class ScrollHolder extends Bag {
 	
 	@Override
 	public boolean grab( Item item ) {
-		return item instanceof Scroll;
+		return item instanceof Scroll || item instanceof ScrollOfWipeOut;
 	}
 	
 	@Override

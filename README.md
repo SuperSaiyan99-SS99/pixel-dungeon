@@ -1,37 +1,23 @@
 Pixel Dungeon
 =============
 
-This is a fork of Watabou's Pixel Dungeon. This repo adds no new features,
-but aims to make setting up Pixel Dungeon a much easier process which everyone
-can easilly build off.
+## v1.9.2a
 
-To setup Pixel Dungeon:
+This is the official source code in terms of functionality based on decompiling the apk of
+Watabou's Pixel Dungeon v1.9.2a. This also attempts to maintain the spacing, wording, and
+styling from the rest of the code for consistency and to look like what Watabou might've
+actually written himself. I was quite thorough when comparing the decompiled apk of v1.9.2a
+to the decompiled apk of v1.9.1 that came from compiling the code that was uploaded to GitHub,
+but if there are any differences that I missed, please create a GitHub issue for them.
 
-1. Fork this repo
-2. Clone the forked repo (note the "--recursive" part): `git clone --recursive https://github.com/your-name/pixel-dungeon`
-3. Start Intellij/Android Studio
-4. Go to File->Open and select the cloned repo
-5. You're done :)
+Differences from Pixel Dungeon v1.9.1 to v1.9.2a:
+https://github.com/SuperSaiyan99-SS99/unbreakable-pixel-dungeon/commit/4b7e970e065a91ca76fdb54112f3d81b4eb04e08
 
-Note that the PD-classes library is included as a submodule in the 'game-engine' directory. 
-If you want to make changes to that library, you'll need to fork the PD-classes library
-found here: https://github.com/mdsimmo/PD-classes
+Differences from PD-classes library (game-engine) v1.9.1 to v1.9.2a:
+https://github.com/SuperSaiyan99-SS99/unbreakable-PD-classes/commit/62b08ff7c040d2c60bf857201ee191a83ae76d6e
 
-## What's different?
+## Unbreakable
 
-Primarilly, this repo has all the gradle build files included so you can easilly start using
-the project with an IDE.
-
-This project also fixes several small compile issues and several oddities in the code.
-
-## Common prolems
-
-### Opening the project in Android Studio results in "Configuration with name 'default' not found"
-That's probably because you cloned the repo without the '--recursive' part. To fix it, run the 
-following from the projects root directory:
-```
-git submodule init
-git submodule update
-cd game-engine
-git checkout master
-```
+This mod of Pixel Dungeon removes degradation from weapons, armor, rings, and wands in v1.9.2a.
+These items no longer take damage and have a durability bar, and as a result, the Auto-repair
+glyph and Tempered enchantment are removed as well as all methods of repairing these items.

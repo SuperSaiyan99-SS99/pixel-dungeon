@@ -18,7 +18,6 @@
 package com.watabou.unbreakablepixeldungeon.actors.buffs;
 
 import com.watabou.unbreakablepixeldungeon.actors.Char;
-import com.watabou.unbreakablepixeldungeon.items.rings.RingOfElements.Resistance;
 import com.watabou.unbreakablepixeldungeon.ui.BuffIndicator;
 
 public class Slow extends FlavourBuff {
@@ -36,7 +35,10 @@ public class Slow extends FlavourBuff {
 	}
 
 	public static float duration( Char ch ) {
-		Resistance r = ch.buff( Resistance.class );
-		return r != null ? r.durationFactor() * DURATION : DURATION;
+		return DURATION * durationFactor( ch ) ;
+	}
+	
+	public float timeScale() {
+		return 1 / (cooldown() / 5 + 1);
 	}
 }

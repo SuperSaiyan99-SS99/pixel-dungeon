@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.unbreakablepixeldungeon.Assets;
 import com.watabou.unbreakablepixeldungeon.actors.Actor;
+import com.watabou.unbreakablepixeldungeon.actors.Char;
 import com.watabou.unbreakablepixeldungeon.actors.buffs.Invisibility;
 import com.watabou.unbreakablepixeldungeon.actors.mobs.npcs.MirrorImage;
-import com.watabou.unbreakablepixeldungeon.items.wands.WandOfBlink;
+import com.watabou.unbreakablepixeldungeon.effects.Pushing;
+import com.watabou.unbreakablepixeldungeon.effects.Speck;
 import com.watabou.unbreakablepixeldungeon.levels.Level;
 import com.watabou.unbreakablepixeldungeon.scenes.GameScene;
 import com.watabou.utils.Random;
@@ -56,7 +58,12 @@ public class ScrollOfMirrorImage extends Scroll {
 			MirrorImage mob = new MirrorImage();
 			mob.duplicate( curUser );
 			GameScene.add( mob );
-			WandOfBlink.appear( mob, respawnPoints.get( index ) );
+			
+			int pos = respawnPoints.get( index );
+			mob.sprite.place( pos );
+			mob.move( pos );
+			mob.sprite.flipHorizontal = curUser.sprite.flipHorizontal;
+			Actor.addDelayed( new Mirroring( mob, curUser.pos, pos ), -1 );
 			
 			respawnPoints.remove( index );
 			nImages--;
@@ -76,5 +83,33 @@ public class ScrollOfMirrorImage extends Scroll {
 	public String desc() {
 		return 
 			"The incantation on this scroll will create illusionary twins of the reader, which will chase his enemies.";
+	}
+	
+	protected static class Mirroring extends Pushing {
+		
+		public Mirroring( Char ch, int from, int to ) {
+			super( ch, from, to );
+			ch.sprite.am = 0;
+		}
+		
+		@Override
+		protected Pushing.Effect effect() {
+			sprite.emitter().start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
+			Sample.INSTANCE.play( Assets.SND_TELEPORT );
+			return new Effect();
+		}
+		
+		protected class Effect extends Pushing.Effect {
+			
+			protected Effect() {
+				super();
+			}
+			
+			@Override
+			public void update() {
+				super.update();
+				sprite.am = delay / 0.15f;
+			}
+		}
 	}
 }

@@ -32,6 +32,7 @@ import com.watabou.unbreakablepixeldungeon.items.food.ChargrilledMeat;
 import com.watabou.unbreakablepixeldungeon.items.food.MysteryMeat;
 import com.watabou.unbreakablepixeldungeon.items.rings.RingOfElements.Resistance;
 import com.watabou.unbreakablepixeldungeon.items.scrolls.Scroll;
+import com.watabou.unbreakablepixeldungeon.items.scrolls.ScrollOfWipeOut;
 import com.watabou.unbreakablepixeldungeon.levels.Level;
 import com.watabou.unbreakablepixeldungeon.scenes.GameScene;
 import com.watabou.unbreakablepixeldungeon.ui.BuffIndicator;
@@ -77,7 +78,7 @@ public class Burning extends Buff implements Hero.Doom {
 			if (target instanceof Hero) {
 				
 				Item item = ((Hero)target).belongings.randomUnequipped();
-				if (item instanceof Scroll) {
+				if (item instanceof Scroll || (item instanceof ScrollOfWipeOut && Random.Float() < 0.5)) {
 					
 					item = item.detach( ((Hero)target).belongings.backpack );
 					GLog.w( TXT_BURNS_UP, item.toString() );

@@ -120,6 +120,10 @@ public class UnbreakablePixelDungeon extends Game {
 		com.watabou.utils.Bundle.addAlias( 
 			com.watabou.unbreakablepixeldungeon.items.wands.WandOfReach.class,
 			"com.watabou.unbreakablepixeldungeon.items.wands.WandOfTelekinesis" );
+		// 1.9.2
+		com.watabou.utils.Bundle.addAlias( 
+			com.watabou.unbreakablepixeldungeon.items.weapon.enchantments.Slowness.class,
+			"com.watabou.unbreakablepixeldungeon.items.weapon.enchantments.Slow" );
 	}
 	
 	@Override
